@@ -31,6 +31,8 @@ def choose_requirement(primary, secondary):
         name = re.split(r'[!<>=]', primary)[0]
         get_distribution(name)
     except DistributionNotFound:
+        if 'opencv-python' in secondary or 'opencv-python-headless' in secondary:
+            return None
         return secondary
 
     return str(primary)
@@ -117,7 +119,7 @@ def parse_requirements(fname='requirements/runtime.txt', with_version=True):
     return packages
 
 
-install_requires = parse_requirements()
+install_requires = [req for req in parse_requirements() if 'opencv-python' not in req and 'opencv-python-headless' not in req]
 
 # try:
 #     # OpenCV installed via conda.
